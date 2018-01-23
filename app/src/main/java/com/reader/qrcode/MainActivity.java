@@ -1,8 +1,17 @@
 package com.reader.qrcode;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
     private Context context;
+    private Activity activity;
     private EditText editext_phonenumber;
     private TextView txtview_secretnumber;
     private Button btn_action;
@@ -26,10 +36,66 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initUI();
+        context = this;
+        activity = this;
+        checkForPermissionModel();
+    }
+
+    private void checkForPermissionModel() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermission();
+            } else
+                initUI();
+        } else
+            initUI();
 
     }
 
+    private void requestCameraPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Camera Permission Required");
+            builder.setMessage("This application requires the camera to perform QRCode Scanning");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 1);
+                }
+            });
+
+            builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+        } else
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, 1);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length == 0) {
+                // TODO: ask again for permissions
+
+            } else {
+                boolean isPermitted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+                if (isPermitted) {
+                    initUI();
+                } else {
+                    Toast.makeText(context, "Camera permission is not provided", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        }
+    }
+
+    /**
+     * initUI
+     * - Initializes the UI components for the screen
+     */
     private void initUI() {
         editext_phonenumber = (EditText) findViewById(R.id.editext_phonenumber);
         txtview_secretnumber = (TextView) findViewById(R.id.txtview_secretnumber);
@@ -66,6 +132,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             * Validates the phone number
+             * @param phone
+             * @return message
+             */
             private String validatePhone(String phone) {
                 String message = null;
 
@@ -80,11 +151,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * regenerateRandomnumber
+     * - Generates a 5 digits random number every time the screen is refreshed
+     */
     private void regenerateRandomnumber() {
         int number = (int) Math.round(Math.random() * 100000);
         txtview_secretnumber.setText(String.valueOf(number));
     }
 
+    /*
+     * Defined to detect if the secret code match was success or failure.
+     * If Success - then User is navigated to the scanner Result Screen
+     * If Failed - The random number is regenerated
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -98,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Defines the clicking purpose of the button handler
+     */
     private enum ScreenMode {
         PhoneVerify, SecretCode
     }

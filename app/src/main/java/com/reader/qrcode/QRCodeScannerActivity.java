@@ -10,6 +10,10 @@ import com.reader.qrcode.constants.AppConstants;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+/**
+ * <b>QRCodeScannerActivity</b>
+ * <p> - The actual scanner implementing the callback by ZXing library</p>
+ */
 public class QRCodeScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private final String TAG = getClass().getSimpleName();
@@ -50,8 +54,5 @@ public class QRCodeScannerActivity extends AppCompatActivity implements ZXingSca
         intent.putExtra(AppConstants.Intent_QRCode_Data, rawResult.getText());
         setResult(RESULT_OK, intent);
         finish();
-
-        // If you would like to resume scanning, call this method below:
-//        mScannerView.resumeCameraPreview(this);
     }
 }

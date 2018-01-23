@@ -27,6 +27,10 @@ public class CodeMatchResultActivity extends AppCompatActivity {
         initUI();
     }
 
+    /**
+     * initUI
+     * - Initializes the UI Components of the screen
+     */
     private void initUI() {
 
         edittext_secretcode = (EditText) findViewById(R.id.edittext_secretcode);
@@ -67,6 +71,7 @@ public class CodeMatchResultActivity extends AppCompatActivity {
                         btn_navigate_back.setVisibility(View.VISIBLE);
                     }
                 } else if (btn_navigate_forward.getTag().equals(Actions.CallScanner.name())) {
+                    // Moves back to the previous screen to properly finsih it and then proceed to QR Code initializer scanner screen
                     setResult(RESULT_OK, getIntent());
                     finish();
                 }
@@ -81,6 +86,9 @@ public class CodeMatchResultActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Based on the matching secret code, button is set to the suitable action
+     */
     private enum Actions {
         VerifySecret, CallScanner
     }

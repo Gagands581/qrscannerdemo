@@ -37,6 +37,10 @@ public class ScannerResultActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * If the QR Code was successfully scanned in the QRCodeScannerActivity then the result would be shown on screen
+     * otherwise nothing happens
+    * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -44,7 +48,8 @@ public class ScannerResultActivity extends AppCompatActivity {
                 txtview_results.setVisibility(View.VISIBLE);
                 txtview_results.setText(data.getStringExtra(AppConstants.Intent_QRCode_Data));
             } else if (resultCode == RESULT_CANCELED) {
-                // do nothing
+                txtview_results.setVisibility(View.GONE);
+                txtview_results.setText("");
             }
         }
     }
