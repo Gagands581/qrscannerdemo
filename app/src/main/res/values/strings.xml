@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">QR Scanner</string>
+
+    <!-- Screen 1 : Phone Verification -->
+    <string name="err_phone_empty">Phone number is empty</string>
+    <string name="err_phone_invalid">Phone number is not valid</string>
+
+    <string name="btn_action_phone_verify">Verify Phone Number</string>
+    <string name="btn_action_phone_next">Next</string>
+
+    <!-- Screen 2 : Secret Code Matcher -->
+    <string name="title_secretcode">Secret Code</string>
+    <string name="hint_secret_code">Enter secret code</string>
+    <string name="err_empty_secret_code">Please enter the secret code</string>
+    <string name="msg_secretcode_matched">Congrats! The secret code matches. Please click proceed to use the QR Code Scanner.</string>
+    <string name="err_secretcode_not_matching">The secret code do not match. Please try a different one or press back to generate another secret code.</string>
+    <string name="btn_secret_proceed">Proceed</string>
+    <string name="btn_secret_check">Check</string>
+    <string name="btn_secret_back">Back</string>
+
+
+</resources>
